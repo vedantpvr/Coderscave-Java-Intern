@@ -1,0 +1,119 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    private String studentName;
+    private int studentId;
+    private double feesPaid;
+    private double totalFees;
+
+    public Student(String studentName, int studentId, double totalFees) {
+        this.studentName = studentName;
+        this.studentId = studentId;
+        this.totalFees = totalFees;
+        this.feesPaid = 0;
+    }
+
+    public void payFees(double fees) {
+        feesPaid += fees;
+    }
+
+    public double getRemainingFees() {
+        return totalFees - feesPaid;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void displayDetails() {
+        System.out.println("Student Name: " + studentName);
+        System.out.println("Student ID: " + studentId);
+        System.out.println("Total Fees: ₹" + totalFees);
+        System.out.println("Fees Paid: ₹" + feesPaid);
+        System.out.println("Remaining Fees: ₹" + getRemainingFees());
+    }
+}
+
+class Institute {
+    private ArrayList<Student> students;
+
+    public Institute() {
+        students = new ArrayList<>();
+    }
+
+    public void addStudent(String name, int id, double totalFees) {
+        Student newStudent = new Student(name, id, totalFees);
+        students.add(newStudent);
+    }
+
+    public void recordFees(int studentId, double fees) {
+        for (Student student : students) {
+            if (studentId == student.getStudentId()) {
+                student.payFees(fees);
+                System.out.println("Fees recorded successfully for Student ID: " + studentId);
+                return;
+            }
+        }
+        System.out.println("Student ID not found. Unable to record fees.");
+    }
+
+    public void displayStudentDetails(int studentId) {
+        for (Student student : students) {
+            if (studentId == student.getStudentId()) {
+                student.displayDetails();
+                return;
+            }
+        }
+        System.out.println("Student ID not found. Unable to display details.");
+    }
+}
+
+public class FeesManagementSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Institute institute = new Institute();
+
+        while (true) {
+            System.out.println("\nFees Management System");
+            System.out.println("1. Add New Student");
+            System.out.println("2. Record Fees Payment");
+            System.out.println("3. Display Student Fee Details");
+            System.out.println("4. Exit");
+            System.out.println("Enter your choice:");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter Student Name:");
+                    String name = scanner.nextLine();
+                    System.out.println("Enter Student ID:");
+                    int id = scanner.nextInt();
+                    System.out.println("Enter Total Fees:");
+                    double totalFees = scanner.nextDouble();
+                    institute.addStudent(name, id, totalFees);
+                    break;
+                case 2:
+                    System.out.println("Enter Student ID to record fees:");
+                    int studentId = scanner.nextInt();
+                    System.out.println("Enter Fees Amount:");
+                    double fees = scanner.nextDouble();
+                    institute.recordFees(studentId, fees);
+                    break;
+                case 3:
+                    System.out.println("Enter Student ID to display fee details:");
+                    int displayId = scanner.nextInt();
+                    institute.displayStudentDetails(displayId);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+}
